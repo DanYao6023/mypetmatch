@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAnalytics } from '@/app/hooks/useAnalytics';
 
-// 定义问卷数据接口
+// Define questionnaire data interface
 interface QuestionnaireData {
   lifestyle: number;
   livingSpace: number;
@@ -16,38 +16,35 @@ export default function QuestionnaireForm() {
   const router = useRouter();
   const { event } = useAnalytics();
   
-  // 使用useState钩子管理表单数据
+  // Use useState hook to manage form data
   const [lifestyleValue, setLifestyleValue] = useState<number>(5);
   const [livingSpaceValue, setLivingSpaceValue] = useState<number>(5);
   const [timeValue, setTimeValue] = useState<number>(5);
   
-  // 处理表单提交
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // 收集表单数据
+    // Collect form data
     const formData: QuestionnaireData = {
       lifestyle: lifestyleValue,
       livingSpace: livingSpaceValue,
       timeAvailable: timeValue,
     };
     
-    // 记录分析事件
-    event('form_submit', { formData });
+    // Log analytics event - fixed type error
+    event('form_submit'); // Only pass event name to match useAnalytics definition
     
     console.log('Form submitted:', formData);
     
-    // 存储数据到localStorage（可选）
+    // Store data to localStorage (optional)
     localStorage.setItem('petMatchData', JSON.stringify(formData));
     
-    // 使用多种导航方法确保至少一种能工作
+    // Use window.location.href for navigation
     try {
-      // 方法1: 使用window.location.href (最可靠的方法，适用于静态导出)
       window.location.href = '/results/';
     } catch (error) {
       console.error('Navigation error:', error);
-      
-      // 方法2: 备选方案
       setTimeout(() => {
         window.location.replace('/results/');
       }, 100);
@@ -56,13 +53,13 @@ export default function QuestionnaireForm() {
   
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">宠物匹配问卷</h1>
+      <h1 className="text-3xl font-bold mb-6">Pet Matching Questionnaire</h1>
       
       <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
-        {/* 生活方式滑块 */}
+        {/* Lifestyle slider */}
         <div className="mb-6">
           <label htmlFor="lifestyle" className="block text-lg font-medium mb-2">
-            您的生活方式有多活跃？ (1=非常安静, 10=非常活跃)
+            How active is your lifestyle? (1=Very quiet, 10=Very active)
           </label>
           <input
             type="range"
@@ -74,16 +71,16 @@ export default function QuestionnaireForm() {
             className="w-full"
           />
           <div className="flex justify-between text-sm">
-            <span>安静</span>
-            <span>适中</span>
-            <span>活跃</span>
+            <span>Quiet</span>
+            <span>Moderate</span>
+            <span>Active</span>
           </div>
         </div>
         
-        {/* 居住空间滑块 */}
+        {/* Living space slider */}
         <div className="mb-6">
           <label htmlFor="living-space" className="block text-lg font-medium mb-2">
-            您的居住空间有多大？ (1=非常小, 10=非常大)
+            How large is your living space? (1=Very small, 10=Very large)
           </label>
           <input
             type="range"
@@ -95,16 +92,16 @@ export default function QuestionnaireForm() {
             className="w-full"
           />
           <div className="flex justify-between text-sm">
-            <span>小</span>
-            <span>中等</span>
-            <span>大</span>
+            <span>Small</span>
+            <span>Medium</span>
+            <span>Large</span>
           </div>
         </div>
         
-        {/* 可用时间滑块 */}
+        {/* Available time slider */}
         <div className="mb-6">
           <label htmlFor="time-available" className="block text-lg font-medium mb-2">
-            您每天能花多少时间照顾宠物？ (1=很少, 10=很多)
+            How much time can you spend caring for a pet each day? (1=Very little, 10=A lot)
           </label>
           <input
             type="range"
@@ -116,22 +113,22 @@ export default function QuestionnaireForm() {
             className="w-full"
           />
           <div className="flex justify-between text-sm">
-            <span>很少</span>
-            <span>适中</span>
-            <span>很多</span>
+            <span>Little</span>
+            <span>Moderate</span>
+            <span>A lot</span>
           </div>
         </div>
         
-        {/* 提交按钮 */}
+        {/* Submit button */}
         <div className="flex justify-between items-center">
           <Link href="/" className="text-blue-500 hover:underline">
-            返回首页
+            Back to Home
           </Link>
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
           >
-            提交
+            Submit
           </button>
         </div>
       </form>
